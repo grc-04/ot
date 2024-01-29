@@ -4,7 +4,7 @@ clear all
 %x1+2x2<=10%
 %x1+x2<=6%
 %x1-2x2<1=%
-%% phase 1 data entry and finding points
+%% phase 1 data entry and finding all
 A=[1 2;1 1;1 -2] 
 B=[10;6;1]
 C=[2 1]
@@ -45,7 +45,7 @@ line3=line3'
 lines=[line1;line2;line3]
 lines=unique(lines,'rows') %% unique by rows
 
-%% phase 4 corner points/intersection of lines
+%% phase 4 corner all/intersection of lines
 temp=[0;0]
 for i=1:size(A,1)
     for j=i+1:size(A,1)
@@ -55,7 +55,26 @@ for i=1:size(A,1)
         temp=[temp p]
     end
 end
-temp=temp'
+sol=temp'
 
+%%phase 5 all all
+all=unique([lines;sol],'rows')
 
+%%phase 6
+for i=1:size(all,1)
+ const1(i)=A(1,1)*all(i,1)+A(1,2)*all(i,2)-B(1)
+ const2(i)=A(2,1)*all(i,1)+A(2,2)*all(i,2)-B(2)
+ const3(i)=A(3,1)*all(i,1)+A(3,2)*all(i,2)-B(3)
+end 
 
+s1=find(const1>0)
+s2=find(const2>0)
+s3=find(const3>0)
+s=unique([s1 s2 s3])
+all(s,:)=[]
+
+%% phase 7
+value=C.*all
+[obj,index] = max(value)
+x1=all(index,1)
+x2=all(index,2)
