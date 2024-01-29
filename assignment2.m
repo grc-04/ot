@@ -72,9 +72,10 @@ s2=find(const2>0)
 s3=find(const3>0)
 s=unique([s1 s2 s3])
 all(s,:)=[]
-
+all=all'
 %% phase 7
-value=C.*all
+value=C*all
 [obj,index] = max(value)
+all=all'
 x1=all(index,1)
 x2=all(index,2)
