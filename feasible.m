@@ -1,52 +1,36 @@
-%  Program to find All Basic Feasible Solution
-clc 
-clear all
+clc;
+clear;
 
-A=[2 3 -1 4;1 -2 6 -7]
-b=[8;-3]
-c=[2 3 4 7]
+c = [2 3 4 7];
+A = [2 3 -1 4; 1 -2 6 -7];
+b = [8; -3];
 
+m = size(A, 1);    %no of rows
+n = size(A, 2);    %no of cols
 
-% # cases discarded-
-% 1. those which are singluar
-% 2. any constraint is -ve
+if m <= n
+    nCm = nchoosek(n, m);   %caculate nCm
+    p = nchoosek(1:n, m);    %matrix of combinations
 
-m=size(A,1);
-n=size(A,2);
+    sol = [];
 
-% Show error when this happens
-if(n<m)
-    error("n is less than m")
-end
+    for i=1:nCm
+        y = zeros(n, 1);    %vector of zeros
 
-
-%  find combination - ncm
-ncm=nchoosek(n,m);
-
-% to make all combination
-p=nchoosek(1:n,m);
-
-sol=[]
-% Now generate all basic solutions
-for i=1:ncm
-    y=zeros(n,1);
-    A1=A(:,p(i,:));
-    x=inv(A1)*b;
-
-
-    % Now check whether any variable is -ve or not 
-    % if -ve then reject as it is not a basic 
-    if all(x>=0&x~=inf)
-        y(p(i,:))=x;
-        sol=[sol y];
+        A1 = A(:, p(i, :));
+        x = inv(A1) * b;
+    
+        if all(x>=0 & x~=inf & x~=-inf)
+            y(p(i,:)) = x;
+            sol = [sol y];
+        end
     end
+
+    z = c * sol;
+    [bfs, index] = max(z);
+    
+    fprintf('Optimal value is %f\n', bfs);
+    fprintf('Optimal solution is (%f, %f, %f, %f)\n', sol(:, index));
+else
+    error('No of unknowns are less than no. of constraints');
 end
-sol %these solutions are column-wise
-
-z=c*sol
-z
-
-[maxz,index]=max(z)
-final=sol(:,index)
-
-fprintf('Optimal value is %i and Optimal solution is (x1,x2,x3,x4) (%f %f %f %f)',maxz,final)
